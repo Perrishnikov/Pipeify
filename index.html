@@ -8,17 +8,23 @@
 </head>
 
 <body>
-    <div>
-        <p>Perry's Pipeify App</p>
+    <div style="margin-left: 30px;">
+        <h1>Perry's Pipeify App</h1><span><a href="README.md">Readme</a></span>
     </div>
-    <form action="/my-handling-form-page" method="post">
-        <div>
-            <label for="msg">Paste:</label>
-            <textarea id="msg" name="user_message"></textarea>
-        </div>
-    </form>
-    <div class="target">
-        <p id=""></p>
+    <div class="general">
+        <h3>Old LABEL_DATASET_NUTRIENT_A </h3>
+    </div>
+    <div id="source" class="general border special" contenteditable="false">
+        click to paste
+    </div>
+    <div class="general">
+        <h3>Pipe-ify'd LABEL_DATASET_NUTRIENT_A </h3>
+    </div>
+    <div id="target" class="general border special" contenteditable="false">
+        <span class="hidden">Hidden</span>
+    </div>
+    <div class="general border message" contenteditable="false">
+        <p> Copied to clipboard <span class="bigger">😊</span></p>
     </div>
     <script src="./app.js"></script>
 </body>
