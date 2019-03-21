@@ -1,6 +1,6 @@
 # Pipeify
 
-https://github.com/Perrishnikov/Pipeify/blob/master/index.html
+https://perrishnikov.github.io/Pipeify/
 
 Salsify:LABEL_DATASET_NUTRIENT_A  (before 1st pin.LineBreak)
 
