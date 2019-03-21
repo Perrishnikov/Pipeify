@@ -3,8 +3,49 @@
 <meta charset="UTF-8">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="./style.css">
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+        }
 
+        .message {
+            margin-top: 1em;
+            background-color: lightgreen;
+            padding: .5em !important;
+            opacity: 0;
+            transition: all 1s;
+        }
+
+        .message.in {
+            padding: .5em !important;
+            margin-top: 1em;
+            opacity: 1;
+            transition: all 1s;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        .general {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        .border {
+            border: 1px solid #CCC;
+            border-radius: 1em;
+        }
+
+        .special {
+            padding: 1em;
+            cursor: pointer;
+        }
+
+        .bigger {
+            font-size: 25px;
+        }
+    </style>
 </head>
 
 <body>

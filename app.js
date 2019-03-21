@@ -2,12 +2,21 @@ const source = document.querySelector('#source');
 const target = document.querySelector('#target');
 const message = document.querySelector('.message');
 
+/** Used to make sure we dont paste the same text */
 let newText;
 
+/** Fade the Copied Message on User paste click */
+function showMessage() {
+
+  message.classList.toggle('in');
+}
+
+/** Magic happens here when User clicks the Source div */
 source.addEventListener('click', e => {
 
   e.preventDefault();
 
+  /** Get the text in the User's clipboard */
   navigator.clipboard.readText()
     .then(clipText => {
 
@@ -21,18 +30,21 @@ source.addEventListener('click', e => {
         /** Write the Pipeified text to the source box and copy it to clipboard */
         navigator.clipboard.writeText(newText)
           .then(() => {
-            /* clipboard successfully set */
             // console.log(`newText: ${newText}`);
+
+            /* clipboard successfully set */
             target.innerText = newText;
+
+            /** Show confirmation message */
             showMessage();
+
+            /** Set the timeout to hide the message after a few seconds */
             setTimeout(showMessage, 4000);
 
           }, function() {
             /* clipboard write failed */
           });
       }
-
-
     });
 });
 
@@ -57,6 +69,16 @@ function pipeify(text) {
 
   let seq = 1;
 
+  /*
+  1|-|Ingrédients médicinaux|-
+  2|-|Racine et feuille d'Ashwagandha (Withania somnifera) (Sensoril®) Standardisé à 32% Withania olgosaccarides|-
+  3|-|10% Withanolide glycosides|-
+  4|-|Ecorce de Magnolia (Magnolia officinalis) 2% Honokiol|-
+  5|-|1% Magnolol|-
+  6|-|L-Theanine (Suntheanine®)|-
+  7|-|Phosphatidylsérine|-
+  */
+
   /** map through each split and pipeify it */
   const rest = text.split(',').map(section => {
     // console.log(section);
@@ -74,26 +96,4 @@ function pipeify(text) {
   }).join('');
 
   return rest;
-}
-
-/*
-1|-|Ingrédients médicinaux|-
-    2|-|Racine et feuille d'Ashwagandha (Withania somnifera) (Sensoril®) Standardisé à 32% Withania olgosaccarides|-
-    3|-|10% Withanolide glycosides|-
-    4|-|Ecorce de Magnolia (Magnolia officinalis) 2% Honokiol|-
-    5|-|1% Magnolol|-
-    6|-|L-Theanine (Suntheanine®)|-
-    7|-|Phosphatidylsérine|-
-    
-*/
-
-function showMessage() {
-  // let classList = [...message.classList];
-  // console.log(classList);
-  message.classList.toggle('in');
-  // function sayHi() {
-  //   alert('Hello');
-  // }
-  
-  
 }
