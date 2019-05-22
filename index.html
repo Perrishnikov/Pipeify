@@ -2,30 +2,42 @@
 <html lang="en">
 <meta charset="UTF-8">
 <title>Pipeify</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
 <head>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
         }
 
-        .message {
-            margin-top: 1em;
+        .good {
             background-color: lightgreen;
-            padding: .5em !important;
-            opacity: 0;
-            transition: all 1s;
         }
 
-        .message.in {
-            padding: .5em !important;
-            margin-top: 1em;
-            opacity: 1;
-            transition: all 1s;
+        .info {
+            background-color: royalblue;
+            color: white;
+        }
+
+        .info-icon {
+            /* margin-left: 10px; */
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .padding {
+            padding: 1em;
+        }
+
+        .label {
+            font-size: 20px;
+            font-weight: bold;
         }
 
         .hidden {
-            visibility: hidden;
+            display: none;
+            /* visibility: hidden; */
         }
 
         .general {
@@ -38,13 +50,37 @@
             border-radius: 1em;
         }
 
-        .special {
-            padding: 1em;
+        .pointer {
+            /* padding: 1em; */
             cursor: pointer;
         }
 
         .bigger {
             font-size: 25px;
+        }
+
+        .message {
+            /* position: absolute; */
+            height: 0;
+            margin-top: 0;
+            padding: 0;
+            opacity: 0;
+            visibility: hidden;
+            /* display: none; */
+            transition: all .5s;
+
+        }
+
+        .message.in {
+            /* position: relative; */
+            height: 20px;
+            padding: .5em !important;
+            margin-top: 1em;
+            opacity: 1;
+            visibility: visible;
+            /* display: block; */
+            transition: all .5s;
+
         }
     </style>
 </head>
@@ -52,24 +88,37 @@
 <body>
     <div style="margin-left: 30px;">
         <h1>Perry's Pipeify App</h1>
-        <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br/>
-        <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Reports Issuses Here</a></span>
+        <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br />
+        <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Report Issues Here</a></span>
     </div>
-    <div class="general">
-        <h3>Old LABEL_DATASET_NUTRIENT_A </h3>
+    <div class="general padding" contenteditable="false">
+        <div class=" label">
+            <svg id="target-icon" class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="RoyalBlue" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="8"></line>
+            </svg>
+            <span>Target: LABEL_DATASET_INGREDIENT_A</span>
+        </div>
+        <!-- message -->
+        <div id="target-info" class="message border info">Source is from NWC Template - everything in single cell</div>
     </div>
-    <div id="source" class="general border special" contenteditable="false">
+    <div id="source" class="general padding border pointer" contenteditable="false">
         click to paste
     </div>
     <div class="general">
-        <h3>Pipe-ify'd LABEL_DATASET_NUTRIENT_A </h3>
+        <h3>Pipe-ify'd LABEL_DATASET_INGREDIENT_A </h3>
     </div>
-    <div id="target" class="general border special" contenteditable="false">
+    <div id="target" class="general padding border pointer" contenteditable="false">
         <span class="hidden">Hidden</span>
     </div>
-    <div class="general border message" contenteditable="false">
-        <p> Copied to clipboard <span class="bigger">😊</span></p>
+    <!-- message -->
+    <div class="general">
+        <div id="source-info" class="message border good" contenteditable="false">
+            Copied to clipboard 😊
+        </div>
     </div>
+
     <script src="./app.js"></script>
 </body>
 

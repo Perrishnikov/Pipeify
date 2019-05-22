@@ -1,6 +1,8 @@
 const source = document.querySelector('#source');
 const target = document.querySelector('#target');
-const message = document.querySelector('.message');
+const targetInfo = document.querySelector('#target-info');
+const targetIcon = document.querySelector('#target-icon');
+const sourceInfo = document.querySelector('#source-info');
 
 /** Used to make sure we dont paste the same text */
 let newText;
@@ -8,7 +10,7 @@ let newText;
 /** Fade the Copied Message on User paste click */
 function showMessage() {
 
-  message.classList.toggle('in');
+  sourceInfo.classList.toggle('in');
 }
 
 /** Magic happens here when User clicks the Source div */
@@ -24,26 +26,28 @@ source.addEventListener('click', e => {
         source.innerText = clipText;
 
         // console.log(`clipText: ${clipText}`);
-
+        // console.log(clipText);
         newText = pipeify(clipText);
 
         /** Write the Pipeified text to the source box and copy it to clipboard */
-        navigator.clipboard.writeText(newText)
-          .then(() => {
-            // console.log(`newText: ${newText}`);
+        // navigator.clipboard.writeText(newText)
+        //   .then(() => {
+        //     // console.log(`newText: ${newText}`);
 
-            /* clipboard successfully set */
-            target.innerText = newText;
+        //     /* clipboard successfully set */
+        //     target.innerText = newText;
 
-            /** Show confirmation message */
-            showMessage();
+        //     /** Show confirmation message */
+        //     showMessage();
 
-            /** Set the timeout to hide the message after a few seconds */
-            setTimeout(showMessage, 4000);
+        //     /** Set the timeout to hide the message after a few seconds */
+        //     setTimeout(showMessage, 4000);
 
-          }, function() {
-            /* clipboard write failed */
-          });
+        //   }, function() {
+        //     /* clipboard write failed */
+        //   });
+
+          target.innerText = newText;
       }
     });
 });
@@ -64,9 +68,14 @@ function pipeify(text) {
    * replace " from excel
    * replace : with a , to better map
    */
-  text = text.replace(/"/g, '').replace(/:/, ',').normalize().trim();
-  // console.log(text);
-
+  text = text
+    // .replace(/:/g, ',')
+    .replace(/ {2,}/g, '') //remove multiple spaces (formatted)
+    .replace(/(".*)([\r\n])(.*")/g, '$1 $3') //remove linebreak fromw between quotes
+    .replace(/"/g, '') //finally, remove quotes - needed above
+    // .replace(/\n/g, ';')
+    .normalize();
+  
   let seq = 1;
 
   /*
@@ -78,22 +87,38 @@ function pipeify(text) {
   6|-|L-Theanine (Suntheanine®)|-
   7|-|Phosphatidylsérine|-
   */
-
+  // console.log(text);
   /** map through each split and pipeify it */
-  const rest = text.split(',').map(section => {
-    // console.log(section);
-    let a = seq; // Sequence 
-    let b = '-'; // blank
-    let c = section.trim(); // concat ingreds and description
-    let d = '-'; // qty
-    let e = '-'; // uom
-    let f = '-'; // blank
-    let g = '-'; // RDA
-    let h = '-'; //symbol like dagger
+  const rest = text.split('\n').map(section => {
+    console.log(section);
+    if(!section) return ''; //just a friendly check
+
+    let [ingred, other = ''] = section.split(/\t/g); //split on tab between cells
+
+    let [qty = '', uom = '', ...theRest] = other.split(/\s/g); //split on the space between "200 mg". any pther junk goes into theRest
+    
+    if(theRest.length){
+      console.log(`%c${theRest}`, 'font-style: italic; background-color: red;padding: 2px');
+    }
+
+    let order = seq; // #1 Sequence 
+    //let ingred = ''; // #2 blank
+    //let qty = section.trim(); // #3 
+    //let uom = ''; // #4 
+    let inputQty = ''; // #5 
+    let inoutUom = ''; // #6 
+    let rda = ''; // #7 rda has a number
+    let footnote = ''; // #8 
 
     seq++;
-    return `${a}|${b}|${c}|${d}|${e}|${f}|${g}|${h}\n`;
+    return `${order}|${ingred.trim()}|${qty.trim()}|${uom.trim()}|${inputQty}|${inoutUom}|${rda.trim()}|${footnote}\n`;
+
   }).join('');
 
   return rest;
 }
+
+targetIcon.addEventListener('click', e => {
+  // document.querySelector('#source-info').classList.toggle('in');
+  document.querySelector('#target-info').classList.toggle('in');
+});
