@@ -7,7 +7,8 @@
 <head>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: proxima-nova,sans-serif;
+            font-weight: normal;
         }
 
         .good {
@@ -87,10 +88,11 @@
 
 <body>
     <div style="margin-left: 30px;">
-        <h1>Perry's Pipeify App</h1>
+        <h1>Pipeify</h1>
         <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br />
         <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Report Issues Here</a></span>
     </div>
+    <h3>Medicinal Ingredients</h3>
     <div class="general padding" contenteditable="false">
         <div class=" label">
             <svg id="target-icon" class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="RoyalBlue" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
@@ -98,20 +100,26 @@
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12" y2="8"></line>
             </svg>
-            <span>Target: LABEL_DATASET_INGREDIENT_A</span>
+            <span>SOURCE from spreadsheet</span>
         </div>
         <!-- message -->
-        <div id="target-info" class="message border info">Source is from NWC Template - everything in single cell</div>
+        <div id="target-info" class="message border info">First row = name, 2nd = qty, 3rd = uom, 4th symbol</div>
     </div>
     <div id="source" class="general padding border pointer" contenteditable="false">
         click to paste
     </div>
     <div class="general">
-        <h3>Pipe-ify'd LABEL_DATASET_INGREDIENT_A </h3>
+        <h3>TARGET as appears in Salsify </h3>
     </div>
     <div id="target" class="general padding border pointer" contenteditable="false">
         <span class="hidden">Hidden</span>
     </div>
+    <div id="" class="general">
+        <h3>PASTE into Salsify</h3>
+    </div>
+    <div id="paste" class="general padding border pointer" contenteditable="false">
+      <span class="hidden">Hidden</span>
+  </div>
     <!-- message -->
     <div class="general">
         <div id="source-info" class="message border good" contenteditable="false">
