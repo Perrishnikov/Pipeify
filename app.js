@@ -151,7 +151,7 @@ function formatTargetText(text) {
 
   /** map through each split */
   const linesHTML = lines.map(line => {
-
+    if(!line)return;
     //if there is text in the first column, track it.
     if (line[0]) {
       activeIngredientType = line[0];
@@ -160,7 +160,7 @@ function formatTargetText(text) {
     // console.log(`activeIngredientType: ${activeIngredientType}`);
     //This is the tile for each section 
     let type = `______${activeIngredientType}______\n`;
-
+console.log(line);
     if (activeIngredientType === 'Medicinal Ingredients' || activeIngredientType === 'Ingrédients médicinaux') {
       const ingred = line[1].trim();
       const qty = line[2].trim();
