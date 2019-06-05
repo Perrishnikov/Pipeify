@@ -1,10 +1,11 @@
 //@ts-check
 const source = document.querySelector('#source');
 const target = document.querySelector('#target');
-const targetInfo = document.querySelector('#target-info');
+// const targetInfo = document.querySelector('#target-info');
 const targetIcon = document.querySelector('#target-icon');
 const sourceInfo = document.querySelector('#source-info');
 const paste = document.querySelector('#paste');
+const numberOfCols = 5;
 
 /** Used to make sure we dont paste the same text */
 let newText;
@@ -103,9 +104,10 @@ function validateClipText(text) {
 function cleanClipText(text) {
 
   text = text
-    .replace(/ {2,}/g, '') //remove multiple spaces (formatted)
-    .replace(/(".*)([\r\n])(.*")/g, '$1 $3') //remove linebreak fromw between quotes
     .replace(/"/g, '') //finally, remove quotes - needed above
+    .replace(/ {2,}/g, '') //remove multiple spaces (formatted)
+    .replace(/(".*)([\r|\n])(.*")/g, '$1 $3') //remove linebreak fromw between quotes
+
     // .replace(/\n/g, ';')
     .normalize();
 
@@ -116,7 +118,7 @@ function cleanClipText(text) {
 function formatClipText(text) {
   //https://www.compart.com/en/unicode/html
   text = text
-    .replace(/ /g, '\u2192') //replace spaces
+    // .replace(/ /g, '\u2192') //replace spaces
     .replace(/\t/g, '\u2197') //replace tabs
     .replace(/(\n|\r)/g, '\u2199$1'); //replace return
 
@@ -126,80 +128,99 @@ function formatClipText(text) {
 
 function formatTargetText(text) {
   let activeIngredientType = null;
+  let noReturns = text.replace(/\n/g, '\t');
+  let allTabs = noReturns.split(/\t/);
+
+  let lines = [];
+
+  // for (let count = 0; count <= (test2.length /5); count ++) {
+  let count = 0;
+  while (count < allTabs.length) {
+    // console.log(`count: ${count}; test2.length: ${test2.length}`);
+    // console.log(test2);
+    /**get this many tabs and add them to a Line */
+    const short = allTabs.splice(0, numberOfCols);
+    // console.log(short);
+    lines.push(short);
+  }
+
+  console.log(lines);
+
 
   /** map through each split and pipeify it */
-  const lines = text.split('\n').map((line, index) => {
-    // console.log(section);
-    if (!line) return 'Error'; //just a friendly check
+    const linesHTML = text.split('\n').map((line, index) => {
 
-    // split each section on tabs
-    const tabs = line.split(/\t/g);
+      if (!line) return 'Error'; //just a friendly check
 
-    //if there is text in the first column, use it.
-    if (tabs[0]) {
-      activeIngredientType = tabs[0];
-    }
+      // split each section on tabs
+      const tabs = line.split(/\t/g);
 
-    // console.log(`activeIngredientType: ${activeIngredientType}`);
-    let type = `______${activeIngredientType}______\n`;
-
-    if (activeIngredientType === 'Medicinal Ingredients') {
-      // const tabType = tabs[0];
-      const ingred = tabs[1].trim();
-      const qty = tabs[2].trim();
-      const uom = tabs[3].trim();
-      const foot = tabs[4].trim();
-      // console.log(`index: ${index}`);
-      if (index == '0') {
-
-        return `${type}${ingred} ${qty} ${uom} ${foot}\n`;
-      } else {
-
-        return `${ingred} ${qty} ${uom} ${foot}\n`;
+      //if there is text in the first column, use it.
+      if (tabs[0]) {
+        activeIngredientType = tabs[0];
       }
-    }
-    //Non-Medicinal Ingred and anything else
-    else {
-      // console.log(tabs);
-      const ingred = tabs[1].trim();
 
-      // return `${type}${ingred}\n`;
-      if (index == '0') {
+      // console.log(`activeIngredientType: ${activeIngredientType}`);
+      let type = `______${activeIngredientType}______\n`;
 
-        return `${type}${ingred}\n`;
-      } else {
+      if (activeIngredientType === 'Medicinal Ingredients') {
+        // const tabType = tabs[0];
+        const ingred = tabs[1].trim();
+        const qty = tabs[2].trim();
+        const uom = tabs[3].trim();
+        const foot = tabs[4].trim();
+        // console.log(`index: ${index}`);
+        if (index == '0') {
 
-        return `${ingred}\n`;
+          return `${type}${ingred} ${qty} ${uom} ${foot}\n`;
+        } else {
+
+          return `${ingred} ${qty} ${uom} ${foot}\n`;
+        }
       }
-    }
-  }).join('');
+      //Non-Medicinal Ingred and anything else
+      else {
+        // console.log(line);
+        let ingred = tabs[1];
+        ingred = ingred.replace(/(\n|\r)/g, '');
+        // console.log(ingred);
+        // return `${type}${ingred}\n`;
+        if (index == '0') {
 
-  return `${lines}`;
-}
+          return `${type}${ingred}\n`;
+        } else {
+
+          return `${ingred}\n`;
+        }
+      }
+    }).join('');
+
+    return linesHTML;
+  }
 
 
-function formatPasteText(text) {
-  let seq = 1;
+  function formatPasteText(text) {
+    let seq = 1;
 
-  /** map through each split and pipeify it */
-  const lines = text.split('\n').map((line, index) => {
-    // console.log(section);
-    if (!line) return ''; //just a friendly check
+    /** map through each split and pipeify it */
+    const lines = text.split('\n').map((line, index) => {
+      // console.log(section);
+      if (!line) return ''; //just a friendly check
 
-    const [ingred, qty = '', uom = '', foot = ''] = line.split(/\t/g);
-    let order = seq; // #1 Sequence 
-    //let ingred = ''; // #2 blank
-    //let qty = section.trim(); // #3 
-    //let uom = ''; // #4 
-    let inputQty = ''; // #5 
-    let inoutUom = ''; // #6 
-    let rda = ''; // #7 rda has a number
-    // let foot = ''; // #8 
+      const [ingred, qty = '', uom = '', foot = ''] = line.split(/\t/g);
+      let order = seq; // #1 Sequence 
+      //let ingred = ''; // #2 blank
+      //let qty = section.trim(); // #3 
+      //let uom = ''; // #4 
+      let inputQty = ''; // #5 
+      let inoutUom = ''; // #6 
+      let rda = ''; // #7 rda has a number
+      // let foot = ''; // #8 
 
-    seq++;
-    return `${order}|${ingred.trim()}|${qty.trim()}|${uom.trim()}|||${foot}||$`;
+      seq++;
+      return `${order}|${ingred.trim()}|${qty.trim()}|${uom.trim()}|||${foot}||$`;
 
-  }).join('');
+    }).join('');
 
   return lines;
 }
