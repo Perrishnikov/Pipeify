@@ -163,7 +163,14 @@ function formatTargetText(text) {
       // console.log(tabs);
       const ingred = tabs[1].trim();
 
-      return `${type}${ingred}\n`;
+      // return `${type}${ingred}\n`;
+      if (index == '0') {
+
+        return `${type}${ingred}\n`;
+      } else {
+
+        return `${ingred}\n`;
+      }
     }
   }).join('');
 
