@@ -170,15 +170,16 @@ function formatTargetText(text) {
   return `${lines}`;
 }
 
+
 function formatPasteText(text) {
   let seq = 1;
 
   /** map through each split and pipeify it */
-  const rest = text.split('\n').map(section => {
+  const lines = text.split('\n').map((line, index) => {
     // console.log(section);
-    if (!section) return ''; //just a friendly check
+    if (!line) return ''; //just a friendly check
 
-    const [ingred, qty = '', uom = '', foot = ''] = section.split(/\t/g);
+    const [ingred, qty = '', uom = '', foot = ''] = line.split(/\t/g);
     let order = seq; // #1 Sequence 
     //let ingred = ''; // #2 blank
     //let qty = section.trim(); // #3 
@@ -193,7 +194,7 @@ function formatPasteText(text) {
 
   }).join('');
 
-  return rest;
+  return lines;
 }
 
 targetIcon.addEventListener('click', () => {
