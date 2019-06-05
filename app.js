@@ -41,7 +41,8 @@ source.addEventListener('click', e => {
           target.innerText = formatTargetText(cleanText);
 
           paste.innerHTML = formatPasteText(validText);
-        } else {
+        } 
+        else {
           target.innerText = '*SOURCE is not valid';
           paste.innerHTML = '';
           return 'error in validation';
@@ -103,14 +104,12 @@ function validateClipText(text) {
  */
 function cleanClipText(text) {
 
-  text = text
-    .replace(/"/g, '') //finally, remove quotes - needed above
-    .replace(/ {2,}/g, '') //remove multiple spaces (formatted)
-    .replace(/(".*)([\r|\n])(.*")/g, '$1 $3') //remove linebreak fromw between quotes
-
-    // .replace(/\n/g, ';')
+  text = text.replace(/ {2,}/g, '') //remove multiple spaces (formatted)
+  text = text.replace(/(".*)(\n)(.*")/g, '$1$3') //remove linebreak fromw between quotes
+    text = text.replace(/"/g, '') //finally, remove quotes - needed above
+    text =text.replace(/\n/g, '#')
     .normalize();
-
+console.log(text);
   return text;
 }
 
@@ -120,44 +119,40 @@ function formatClipText(text) {
   text = text
     // .replace(/ /g, '\u2192') //replace spaces
     .replace(/\t/g, '\u2197') //replace tabs
-    .replace(/(\n|\r)/g, '\u2199$1'); //replace return
+    .replace(/[\n\r]/g, '\u2199$1'); //replace return
 
   return text;
 }
 
 
 function formatTargetText(text) {
+  console.log(text);
   let activeIngredientType = null;
-  let noReturns = text.replace(/\n/g, '\t');
-  let allTabs = noReturns.split(/\t/);
-
+  let noReturns = text.replace(/(\S)?\n/g, '$1'); //change \n into \t 
+  noReturns = noReturns.replace(/#/g, '\t'); //change \n into \t 
+  let allTabs = noReturns.split(/\t/); //array of tabs
+console.log(allTabs);
   let lines = [];
 
-  // for (let count = 0; count <= (test2.length /5); count ++) {
   let count = 0;
   while (count < allTabs.length) {
-    // console.log(`count: ${count}; test2.length: ${test2.length}`);
-    // console.log(test2);
+
     /**get this many tabs and add them to a Line */
     const short = allTabs.splice(0, numberOfCols);
-    // console.log(short);
+    console.log(short);
     lines.push(short);
   }
 
-  console.log(lines);
+  // console.log(lines);
 
 
   /** map through each split and pipeify it */
-    const linesHTML = text.split('\n').map((line, index) => {
-
-      if (!line) return 'Error'; //just a friendly check
-
-      // split each section on tabs
-      const tabs = line.split(/\t/g);
+    const linesHTML = lines.map((line, index) => {
+      console.log(line);
 
       //if there is text in the first column, use it.
-      if (tabs[0]) {
-        activeIngredientType = tabs[0];
+      if (line[0]) {
+        activeIngredientType = line[0];
       }
 
       // console.log(`activeIngredientType: ${activeIngredientType}`);
@@ -165,12 +160,12 @@ function formatTargetText(text) {
 
       if (activeIngredientType === 'Medicinal Ingredients') {
         // const tabType = tabs[0];
-        const ingred = tabs[1].trim();
-        const qty = tabs[2].trim();
-        const uom = tabs[3].trim();
-        const foot = tabs[4].trim();
-        // console.log(`index: ${index}`);
-        if (index == '0') {
+        const ingred = line[1].trim();
+        const qty = line[2].trim();
+        const uom = line[3].trim();
+        const foot = line[4].trim();
+        
+        if (line[0]) {
 
           return `${type}${ingred} ${qty} ${uom} ${foot}\n`;
         } else {
@@ -180,12 +175,9 @@ function formatTargetText(text) {
       }
       //Non-Medicinal Ingred and anything else
       else {
-        // console.log(line);
-        let ingred = tabs[1];
-        ingred = ingred.replace(/(\n|\r)/g, '');
-        // console.log(ingred);
-        // return `${type}${ingred}\n`;
-        if (index == '0') {
+        const ingred = line[1].trim();
+
+        if (line[0]) {
 
           return `${type}${ingred}\n`;
         } else {
