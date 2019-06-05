@@ -81,7 +81,6 @@
             visibility: visible;
             /* display: block; */
             transition: all .5s;
-
         }
     </style>
 </head>
@@ -91,8 +90,12 @@
         <h1>Pipeify</h1>
         <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br />
         <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Report Issues Here</a></span>
+        <ul>
+          <li>Need to test paste into Salsify</li>
+          <li>Salsify will, at least temporarily, need another prop for Medicinal Ingreds and one for Non Medicinal. Presently, formatting is coming from PLM - doesn't match what is in Excel template</li>
+        </ul>
     </div>
-    <h3>Medicinal Ingredients</h3>
+    <h3>Canadian Ingredients</h3>
     <div class="general padding" contenteditable="false">
         <div class=" label">
             <svg id="target-icon" class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="RoyalBlue" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
@@ -108,12 +111,14 @@
     <div id="source" class="general padding border pointer" contenteditable="false">
         click to paste
     </div>
+    <!-- TARGET -->
     <div class="general">
         <h3>TARGET as appears in Salsify </h3>
     </div>
     <div id="target" class="general padding border pointer" contenteditable="false">
         <span class="hidden">Hidden</span>
     </div>
+    <!-- PASTE -->
     <div id="" class="general">
         <h3>PASTE into Salsify</h3>
     </div>

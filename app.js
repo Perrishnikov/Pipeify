@@ -1,3 +1,4 @@
+//@ts-check
 const source = document.querySelector('#source');
 const target = document.querySelector('#target');
 const targetInfo = document.querySelector('#target-info');
@@ -24,11 +25,11 @@ source.addEventListener('click', e => {
     .then(clipText => {
 
       if (clipText !== newText) {
-        source.innerText = formatClipText(clipText);
+        /** add unicode characters and show it in SOURCE */
+        const formattedText = formatClipText(clipText);
+        source.innerText = formattedText;
 
-        // console.log(`clipText: ${clipText}`);
-        // console.log(clipText);
-
+        /** check text against rules */
         const validText = validateClipText(clipText);
         // console.log(`validiatedText: ${validText}`);
 
@@ -40,27 +41,31 @@ source.addEventListener('click', e => {
 
           paste.innerHTML = formatPasteText(validText);
         } else {
+          target.innerText = '*SOURCE is not valid';
+          paste.innerHTML = '';
           return 'error in validation';
         }
 
+        {
+          /** Write the Pipeified text to the source box and copy it to clipboard */
+          // navigator.clipboard.writeText(newText)
+          //   .then(() => {
+          //     // console.log(`newText: ${newText}`);
 
-        /** Write the Pipeified text to the source box and copy it to clipboard */
-        // navigator.clipboard.writeText(newText)
-        //   .then(() => {
-        //     // console.log(`newText: ${newText}`);
+          //     /* clipboard successfully set */
+          //     target.innerText = newText;
 
-        //     /* clipboard successfully set */
-        //     target.innerText = newText;
+          //     /** Show confirmation message */
+          //     showMessage();
 
-        //     /** Show confirmation message */
-        //     showMessage();
+          //     /** Set the timeout to hide the message after a few seconds */
+          //     setTimeout(showMessage, 4000);
 
-        //     /** Set the timeout to hide the message after a few seconds */
-        //     setTimeout(showMessage, 4000);
+          //   }, function() {
+          //     /* clipboard write failed */
+          //   });
+        }
 
-        //   }, function() {
-        //     /* clipboard write failed */
-        //   });
       }
     });
 });
@@ -73,7 +78,7 @@ source.addEventListener('click', e => {
  */
 function validateClipText(text) {
   let result; // boolean
-  const numberOfTabs = 3; //3 tabs == 4 columns
+  const numberOfTabs = 4; //3 tabs == 4 columns
 
   /* TEST - Column Count
    * make sure that each section has ^^ columns 
@@ -91,6 +96,10 @@ function validateClipText(text) {
 }
 
 
+/**
+ * Basic cleanup like trim() at this point
+ * @param {} text 
+ */
 function cleanClipText(text) {
 
   text = text
@@ -107,8 +116,8 @@ function cleanClipText(text) {
 function formatClipText(text) {
   //https://www.compart.com/en/unicode/html
   text = text
-    .replace(/ /g, '\u00b7') //replace spaces
-    .replace(/\t/g, '\u2192') //replace tabs
+    .replace(/ /g, '\u2192') //replace spaces
+    .replace(/\t/g, '\u2197') //replace tabs
     .replace(/(\n|\r)/g, '\u2199$1'); //replace return
 
   return text;
@@ -116,22 +125,49 @@ function formatClipText(text) {
 
 
 function formatTargetText(text) {
-  let seq = 1;
+  let activeIngredientType = null;
 
   /** map through each split and pipeify it */
-  const rest = text.split('\n').map(section => {
-    console.log(section);
-    if (!section) return ''; //just a friendly check
+  const lines = text.split('\n').map((line, index) => {
+    // console.log(section);
+    if (!line) return 'Error'; //just a friendly check
 
-    //split each section on tabs
-    const [ingred, qty = '', uom = '', foot = ''] = section.split(/\t/g);
+    // split each section on tabs
+    const tabs = line.split(/\t/g);
 
-    seq++;
-    return `${ingred.trim()} ${qty.trim()} ${uom.trim()} ${foot.trim()}\n`;
+    //if there is text in the first column, use it.
+    if (tabs[0]) {
+      activeIngredientType = tabs[0];
+    }
 
+    // console.log(`activeIngredientType: ${activeIngredientType}`);
+    let type = `______${activeIngredientType}______\n`;
+
+    if (activeIngredientType === 'Medicinal Ingredients') {
+      // const tabType = tabs[0];
+      const ingred = tabs[1].trim();
+      const qty = tabs[2].trim();
+      const uom = tabs[3].trim();
+      const foot = tabs[4].trim();
+      // console.log(`index: ${index}`);
+      if (index == '0') {
+
+        return `${type}${ingred} ${qty} ${uom} ${foot}\n`;
+      } else {
+
+        return `${ingred} ${qty} ${uom} ${foot}\n`;
+      }
+    }
+    //Non-Medicinal Ingred and anything else
+    else {
+      // console.log(tabs);
+      const ingred = tabs[1].trim();
+
+      return `${type}${ingred}\n`;
+    }
   }).join('');
 
-  return `____Medicinal Ingredients_____\n${rest}`;
+  return `${lines}`;
 }
 
 function formatPasteText(text) {
@@ -139,7 +175,7 @@ function formatPasteText(text) {
 
   /** map through each split and pipeify it */
   const rest = text.split('\n').map(section => {
-    console.log(section);
+    // console.log(section);
     if (!section) return ''; //just a friendly check
 
     const [ingred, qty = '', uom = '', foot = ''] = section.split(/\t/g);
