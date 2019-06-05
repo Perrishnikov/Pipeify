@@ -105,7 +105,7 @@ function cleanClipText(text) {
 
   /*Order seems to matter - dont mess with it.*/
   text = text.replace(/ {2,}/g, ''); //remove multiple spaces (formatted)
-  text = text.replace(/(".*)(\n)(.*")/g, '$1$3'); //remove newline from between quotes(ingreds)
+  text = text.replace(/(".*)(\n)(.*")/g, '$1 $3'); //remove newline from between quotes(ingreds)
   text = text.replace(/"/g, ''); //finally, remove quotes - needed above
   text = text.replace(/\n/g, '\t'); //make all end-of-lines into tabs
   // console.log(text);
@@ -120,7 +120,7 @@ function formatClipText(text) {
   //https://www.compart.com/en/unicode/html
   text = text
     .replace(/\t/g, '\u2197') //replace tabs
-    .replace(/[\n\r]/g, '\u2199$1'); //replace return
+    .replace(/[\n\r]/g, '\u2199'); //replace return
 
   return text;
 }
@@ -142,6 +142,7 @@ function formatTargetText(text) {
     const short = allTabs.splice(0, numberOfCols);
     // console.log(short);
     lines.push(short);
+    count++;
   }
 
   console.log(lines);
