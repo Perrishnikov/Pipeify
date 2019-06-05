@@ -159,7 +159,7 @@ function formatTargetText(text) {
     //This is the tile for each section 
     let type = `______${activeIngredientType}______\n`;
 
-    if (activeIngredientType === 'Medicinal Ingredients') {
+    if (activeIngredientType === 'Medicinal Ingredients' || activeIngredientType === 'Ingrédients médicinaux') {
       const ingred = line[1].trim();
       const qty = line[2].trim();
       const uom = line[3].trim();
