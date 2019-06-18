@@ -7,7 +7,7 @@
 <head>
     <style>
         body {
-            font-family: proxima-nova,sans-serif;
+            font-family: proxima-nova, sans-serif;
             font-weight: normal;
         }
 
@@ -91,11 +91,16 @@
         <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br />
         <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Report Issues Here</a></span>
         <ul>
-          <li>Need to test paste into Salsify</li>
-          <li>Salsify will, at least temporarily, need another prop for Medicinal Ingreds and one for Non Medicinal. Presently, formatting is coming from PLM - doesn't match what is in Excel template</li>
+            <li>Move all non- Medicinal Ingreds into "Non Medicinal Ingredients". </li>
+            <li>Update formatting for paste</li>
+            <li>Do we want to save data?</li>
+            <li>How to enter translations...</li>
         </ul>
     </div>
-    <h3>Canadian Ingredients</h3>
+    <div class="padding">
+        <h3>Canadian Ingredients</h3>
+    </div>
+
     <div class="general padding" contenteditable="false">
         <div class=" label">
             <svg id="target-icon" class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="RoyalBlue" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
@@ -123,8 +128,8 @@
         <h3>PASTE into Salsify</h3>
     </div>
     <div id="paste" class="general padding border pointer" contenteditable="false">
-      <span class="hidden">Hidden</span>
-  </div>
+        <span class="hidden">Hidden</span>
+    </div>
     <!-- message -->
     <div class="general">
         <div id="source-info" class="message border good" contenteditable="false">
