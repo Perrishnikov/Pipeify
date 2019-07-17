@@ -96,7 +96,8 @@ function pipeifyUS(text) {
   let onceThrough = false;
 
   //While loop will capture blank columns
-  while (allTabs.length) {
+  console.log(allTabs);
+  while (allTabs.length > 0) {
     /**get this many tabs and add them to a Line */
     const short = allTabs.splice(0, numberOfCols);
 
