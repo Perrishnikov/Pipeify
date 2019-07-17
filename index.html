@@ -88,17 +88,24 @@
 <body>
     <div style="margin-left: 30px;">
         <h1>Pipeify</h1>
-        <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br />
-        <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Report Issues Here</a></span>
+        <!-- <span><a href="https://github.com/Perrishnikov/Pipeify">Readme on Github</a></span><br />
+        <span><a href="https://github.com/Perrishnikov/Pipeify/issues">Report Issues Here</a></span> -->
+        Email questions to <a href="mailto:perry.sieber@naturesway.com?subject=Pipeify Question">Perry</a>.
         <ul>
-            <li>Move all non- Medicinal Ingreds into "Non Medicinal Ingredients". </li>
+            <!-- <li>Move all non- Medicinal Ingreds into "Non Medicinal Ingredients". </li>
             <li>Update formatting for paste</li>
             <li>Do we want to save data?</li>
-            <li>How to enter translations...</li>
+            <li>How to enter translations...</li> -->
         </ul>
     </div>
-    <div class="padding">
-        <h3>Canadian Ingredients</h3>
+    <div class="general padding">
+      Select Template:
+        <select id="countrySelect">
+            <option value="">--Please choose an option--</option>
+            <option value="CA">Canadian Ingredients</option>
+            <option value="US">US Ingredients</option>
+        </select>
+        <span style="margin-left:30px;"><a href="./Pipeify Template.xlsx">Download Template</a></span>
     </div>
 
     <div class="general padding" contenteditable="false">
@@ -111,10 +118,10 @@
             <span>SOURCE from spreadsheet</span>
         </div>
         <!-- message -->
-        <div id="target-info" class="message border info">First row = name, 2nd = qty, 3rd = uom, 4th symbol</div>
+        <div id="target-info" class="message border info"></div>
     </div>
     <div id="source" class="general padding border pointer" contenteditable="false">
-        click to paste
+        click to paste from Template
     </div>
     <!-- TARGET -->
     <div class="general">
@@ -125,7 +132,7 @@
     </div>
     <!-- PASTE -->
     <div id="" class="general">
-        <h3>PASTE into Salsify</h3>
+        <h3>PASTE into <a href="https://app.salsify.com/app/orgs/s-f73c1ef5-feb8-4209-b98f-559667e190f8/products?content_locales[]=en-US">Salsify</a> INGREDIENT_TEMPLATE_IMPORT</INGREDIENTS_TEMPLATE_IMPORT></h3>
     </div>
     <div id="paste" class="general padding border pointer" contenteditable="false">
         <span class="hidden">Hidden</span>

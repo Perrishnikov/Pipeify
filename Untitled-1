@@ -1,0 +1,66 @@
+create a document with definitive task list for people
+Mandy wants to 
+What to do,
+When to do it.
+
+
+**TODO: ** Have Mandy combined all non-med into non-med..
+
+
+Hide SOURCE from Mandy
+  Add colummn for EN and FR
+
+Find out what the props(EN anf FR) in NW+EW is that Mandy needs to paste.
+
+Mandy says that we can copy all EN and 2 FR columns
+
+
+function formatTargetText(text) {
+  const allTabs = text.split(/\t/); //array of tabs
+  let activeIngredientType = null;
+  let lines = [];
+
+  // let count = 0;
+  while (allTabs.length) {
+    /**get this many tabs and add them to a Line */
+    const short = allTabs.splice(0, numberOfCols);
+    // console.log(short);
+    lines.push(short);
+    // count++;
+  }
+
+  console.log(lines);
+
+  /** map through each split */
+  const linesHTML = lines.map(line => {
+    if (line.length < numberOfCols) return;
+    //if there is text in the first column, track it.
+    if (line[0]) {
+      activeIngredientType = line[0];
+    }
+
+    // console.log(`activeIngredientType: ${activeIngredientType}`);
+    //This is the tile for each section 
+    let type = `______${activeIngredientType}______\n`;
+    console.log(line);
+    if (activeIngredientType === 'Medicinal Ingredients' || activeIngredientType === 'Ingrédients médicinaux') {
+      const ingred = line[1].trim();
+      const qty = line[2].trim();
+      const uom = line[3].trim();
+      const foot = line[4].trim();
+
+      // If this has a title (line[0]), use it. Returns the rest
+      return `${line[0] ? type : ''}${ingred} ${qty} ${uom} ${foot}\n`;
+    }
+    //Non-Medicinal Ingred and anything else
+    else {
+      const ingred = line[1].trim();
+
+      // If this has a title (line[0]), use it. Returns the rest
+      return `${line[0] ? type : ''}${ingred}\n`;
+
+    }
+  }).join('');
+
+  return linesHTML;
+}

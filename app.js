@@ -1,7 +1,8 @@
 //ts-check
+
 const source = document.querySelector('#source');
 const target = document.querySelector('#target');
-// const targetInfo = document.querySelector('#target-info');
+const countrySelect = document.querySelector('#countrySelect');
 const targetIcon = document.querySelector('#target-icon');
 const sourceInfo = document.querySelector('#source-info');
 const paste = document.querySelector('#paste');
@@ -10,67 +11,226 @@ const numberOfCols = 5;
 /** Used to make sure we dont paste the same text */
 let newText;
 
-/** Fade the Copied Message on User paste click */
-function showMessage() {
-
-  sourceInfo.classList.toggle('in');
-}
-
 /** Magic happens here when User clicks the Source div */
 source.addEventListener('click', e => {
 
   e.preventDefault();
 
-  /** Get the text in the User's clipboard */
-  navigator.clipboard.readText()
-    .then(clipText => {
+  target.innerText = '';
+  source.innerText = 'click to paste';
 
-      if (clipText !== newText) {
-        /** add unicode characters and show it in SOURCE */
-        const formattedText = formatClipText(clipText);
-        source.innerText = formattedText;
+  /** Only if user selects US or CA */
+  if (countrySelect.value !== '') {
 
-        /** check text against rules */
-        const validText = validateClipText(clipText);
-        // console.log(`validiatedText: ${validText}`);
+    /** Get the text in the User's clipboard */
+    navigator.clipboard.readText()
+      .then(clipText => {
 
-        if (validText) {
-          const cleanText = cleanClipText(validText);
+        if (clipText !== newText) {
+          /** add unicode characters and show it in SOURCE */
+          // const formattedText = formatClipText(clipText);
+          // source.innerText = formattedText;
 
-          // target.innerText = pipeify(cleanText);
-          target.innerText = formatTargetText(cleanText);
+          /** check text against rules */
+          const validText = validateClipText(clipText);
+          // console.log(`validiatedText: ${validText}`);
 
-          paste.innerHTML = formatPasteText(validText);
-        } else {
-          target.innerText = '*SOURCE is not valid';
-          paste.innerHTML = '';
-          return 'error in validation';
+          if (validText) {
+            const cleanText = cleanClipText(validText);
+            let innerHTML = ''
+            let innerText = '';
+
+
+            if (countrySelect.value == 'CA') {
+              innerHTML = pipeifyCA(cleanText);
+              innerText = formatTargetTextCA(pipeifyCA(cleanText));
+
+            } //US Template
+            else {
+              innerHTML = pipeifyUS(cleanText);
+              innerText = formatTargetTextUS(pipeifyUS(cleanText));
+            }
+
+            paste.innerHTML = innerHTML;
+            target.innerText = innerText;
+
+            /** Write the Pipeified text to the source box and copy it to clipboard */
+            navigator.clipboard.writeText(innerHTML)
+              .then((goodStuff) => {
+                //     console.log(`goodStuff: ${goodStuff}`);
+
+                //     /* clipboard successfully set */
+                //     // target.innerText = goodStuff;
+
+
+                //     /** Show confirmation message */
+                showMessage();
+
+                //     /** Set the timeout to hide the message after a few seconds */
+                setTimeout(showMessage, 4000);
+
+              }, function() {
+                /* clipboard write failed */
+              });
+
+          } else {
+            source.innerText = `*SOURCE is not valid; Need ${numberOfCols} columns`;
+            paste.innerHTML = '';
+            return 'error in validation';
+          }
         }
+      });
 
-        {
-          /** Write the Pipeified text to the source box and copy it to clipboard */
-          // navigator.clipboard.writeText(newText)
-          //   .then(() => {
-          //     // console.log(`newText: ${newText}`);
+  } else {
+    source.innerText = `Please select US or CA template`;
+    paste.innerHTML = '';
+  }
 
-          //     /* clipboard successfully set */
-          //     target.innerText = newText;
-
-          //     /** Show confirmation message */
-          //     showMessage();
-
-          //     /** Set the timeout to hide the message after a few seconds */
-          //     setTimeout(showMessage, 4000);
-
-          //   }, function() {
-          //     /* clipboard write failed */
-          //   });
-        }
-
-      }
-    });
 });
 
+function pipeifyUS(text) {
+  const allTabs = text.split(/\t/); //array of tabs
+  let pipifiedText = '';
+  let activeType = null;
+  let seq = 1;
+  let onceThrough = false;
+
+  //While loop will capture blank columns
+  while (allTabs.length) {
+    /**get this many tabs and add them to a Line */
+    const short = allTabs.splice(0, numberOfCols);
+
+    // const nothing = short[0].trim();
+    const ingred = short[1].trim();
+    const qty = short[2].trim();
+    const uom = short[3].trim();
+    const foot = short[4].trim();
+
+    //if there is text in the first column, track it.
+    if (short[0]) {
+      activeType = short[0];
+      //A little dirty, but good enough
+      if (short[0] === 'Ingredients') pipifiedText += `#`;
+    }
+
+    // Nutrients and Ingredients get a sequence
+    if (activeType === 'Nutrients' || activeType === 'Ingredients') {
+
+      // If this has a title (line[0]), use it. Returns the rest
+      pipifiedText += `${seq}|${ingred}|${qty}|${uom}|||${foot}||$`;
+    }
+    //Other Ingredients and anything else dont
+    else {
+
+      //If this is non-med
+      if (!onceThrough) {
+        pipifiedText += `#|${ingred}|${qty}|${uom}|||${foot}||$`;
+        onceThrough = true;
+      } else {
+        //if this is anything else
+        pipifiedText += `|${ingred}|${qty}|${uom}|||${foot}||$`;
+      }
+
+    }
+
+    seq++;
+  }
+
+  return pipifiedText;
+}
+
+/**
+ * Formats the text for insertion into DOM
+ * This is what text will look like in Salsify
+ * @param {string} text 
+ */
+function formatTargetTextUS(text) {
+  const allsections = text.split('#'); //array of tabs
+  let lineText;
+  const sectionNames = { 0: 'Nutrients', 1: 'Ingredients', 2: 'Other Ingredients' };
+
+  const sectionText = allsections.map((section, index) => {
+    const lines = section.split('$').filter(line => line);
+
+    //Name each section as above
+    const sectionName = sectionNames[index];
+
+    lineText = lines.map(line => {
+      const split = line.split('|');
+      const seq = split[0].trim();
+      const ingred = split[1].trim();
+      const qty = split[2].trim();
+      const uom = split[3].trim();
+      const foot = split[4].trim();
+
+      if (index != 2) {
+        return `${ingred} ${qty} ${uom} \n`;
+      } else {
+        return `${ingred}, `;
+      }
+
+    }).join('');
+
+    return `____${sectionName}____\n${lineText}`;
+
+  }).join('');
+
+  // console.log(sectionText);
+  return sectionText;
+}
+
+
+function pipeifyCA(text) {
+  const allTabs = text.split(/\t/); //array of tabs
+  let pipifiedText = '';
+  let activeType = null;
+  let seq = 1;
+  let onceThrough = false;
+
+  //While loop will capture blank columns
+  while (allTabs.length) {
+    // get this many tabs and add them to a Line 
+    const short = allTabs.splice(0, numberOfCols);
+
+    // If there are any blank lines, ignore them 
+    if (!short.every(element => element == '')) {
+
+      const ingred = short[1].trim();
+      const qty = short[2].trim();
+      const uom = short[3].trim();
+      const foot = short[4].trim();
+
+      //if there is text in the first column, track it.
+      if (short[0]) {
+        activeType = short[0];
+      }
+
+      if (activeType === 'Medicinal Ingredients' || activeType === 'Ingrédients médicinaux') {
+
+        // If this has a title (line[0]), use it. Returns the rest
+        pipifiedText += `${seq}|${ingred}|${qty}|${uom}|||${foot}||$`;
+      }
+      //Non-Medicinal Ingred and anything else
+      else {
+
+        //If this is non-med
+        if (!onceThrough) {
+          pipifiedText += `#|${ingred}|${qty}|${uom}|||${foot}||$`;
+          onceThrough = true;
+        } else {
+          //if this is anything else
+          pipifiedText += `|${ingred}|${qty}|${uom}|||${foot}||$`;
+        }
+
+      } //close section
+
+      seq++;
+    } // close if ''
+
+  } // close while
+
+  return pipifiedText;
+}
 
 /**
  * Validation Tests for the pasted string
@@ -102,7 +262,6 @@ function validateClipText(text) {
  * @param {string} text 
  */
 function cleanClipText(text) {
-
   /*Order seems to matter - dont mess with it.*/
   text = text.replace(/ {2,}/g, ''); //remove multiple spaces (formatted)
   text = text.replace(/(".*)(\n)([^"].*)(\n)(.*"\t{2})/g, '$1 $3 $5'); //remove newline from between quotes(ingreds)
@@ -133,82 +292,55 @@ function formatClipText(text) {
  * This is what text will look like in Salsify
  * @param {string} text 
  */
-function formatTargetText(text) {
-  const allTabs = text.split(/\t/); //array of tabs
-  let activeIngredientType = null;
-  let lines = [];
-
-  // let count = 0;
-  while (allTabs.length) {
-    /**get this many tabs and add them to a Line */
-    const short = allTabs.splice(0, numberOfCols);
-    // console.log(short);
-    lines.push(short);
-    // count++;
-  }
-
-  console.log(lines);
-
-  /** map through each split */
-  const linesHTML = lines.map(line => {
-    if (line.length < numberOfCols) return;
-    //if there is text in the first column, track it.
-    if (line[0]) {
-      activeIngredientType = line[0];
+function formatTargetTextCA(text) {
+  const allsections = text.split('#'); //array of tabs
+  let lineText;
+  const sectionNames = {
+    0: {
+      'EN': 'Medicinal Ingredients',
+      'FR': 'Ingrédients médicinaux'
+    },
+    1: {
+      'EN': 'Non-Medicinal Ingredients',
+      'FR': 'Ingrédients non médicinaux'
     }
+  };
 
-    // console.log(`activeIngredientType: ${activeIngredientType}`);
-    //This is the tile for each section 
-    let type = `______${activeIngredientType}______\n`;
-    console.log(line);
-    if (activeIngredientType === 'Medicinal Ingredients' || activeIngredientType === 'Ingrédients médicinaux') {
-      const ingred = line[1].trim();
-      const qty = line[2].trim();
-      const uom = line[3].trim();
-      const foot = line[4].trim();
+  const sectionText = allsections.map((section, index) => {
+    const lines = section.split('$').filter(line => line);
+    const sectionName = index == 0 ? 'Medicinal Ingredients' : 'Non-Medicinal Ingredients';
 
-      // If this has a title (line[0]), use it. Returns the rest
-      return `${line[0] ? type : ''}${ingred} ${qty} ${uom} ${foot}\n`;
-    }
-    //Non-Medicinal Ingred and anything else
-    else {
-      const ingred = line[1].trim();
+    lineText = lines.map(line => {
+      const split = line.split('|');
+      const seq = split[0].trim();
+      const ingred = split[1].trim();
+      const qty = split[2].trim();
+      const uom = split[3].trim();
+      const foot = split[4].trim();
 
-      // If this has a title (line[0]), use it. Returns the rest
-      return `${line[0] ? type : ''}${ingred}\n`;
+      if (index == 0) {
+        return `${ingred} ${qty} ${uom} \n`;
+      } else {
+        return `${ingred}, `;
+      }
 
-    }
-  }).join('');
+    }).join('');
 
-  return linesHTML;
-}
-
-
-function formatPasteText(text) {
-  let seq = 1;
-
-  /** map through each split and pipeify it */
-  const lines = text.split('\n').map((line, index) => {
-    // console.log(section);
-    if (!line) return ''; //just a friendly check
-
-    const [ingred, qty = '', uom = '', foot = ''] = line.split(/\t/g);
-    let order = seq; // #1 Sequence 
-    //let ingred = ''; // #2 blank
-    //let qty = section.trim(); // #3 
-    //let uom = ''; // #4 
-    let inputQty = ''; // #5 
-    let inoutUom = ''; // #6 
-    let rda = ''; // #7 rda has a number
-    // let foot = ''; // #8 
-
-    seq++;
-    return `${order}|${ingred.trim()}|${qty.trim()}|${uom.trim()}|||${foot}||$`;
+    return `____${sectionName}____\n${lineText}`;
 
   }).join('');
 
-  return lines;
+  // console.log(sectionText);
+  return sectionText;
 }
+
+
+/** Fade the Copied Message on User paste click */
+function showMessage() {
+
+  sourceInfo.classList.toggle('in');
+}
+
 
 targetIcon.addEventListener('click', () => {
   // document.querySelector('#source-info').classList.toggle('in');
