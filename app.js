@@ -101,7 +101,7 @@ function pipeifyUS(text) {
     /**get this many tabs and add them to a Line */
     const short = allTabs.splice(0, numberOfCols);
 console.log(short);
-    if (short.length > 5) {
+    if (short[1]) {
       // const nothing = short[0].trim();
       const ingred = short[1].trim();
       const qty = short[2].trim();
