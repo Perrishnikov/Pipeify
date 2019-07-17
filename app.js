@@ -100,8 +100,8 @@ function pipeifyUS(text) {
   while (allTabs.length > 0) {
     /**get this many tabs and add them to a Line */
     const short = allTabs.splice(0, numberOfCols);
-
-    if (short) {
+console.log(short);
+    if (short.length > 5) {
       // const nothing = short[0].trim();
       const ingred = short[1].trim();
       const qty = short[2].trim();
