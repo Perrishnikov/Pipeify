@@ -101,40 +101,43 @@ function pipeifyUS(text) {
     /**get this many tabs and add them to a Line */
     const short = allTabs.splice(0, numberOfCols);
 
-    // const nothing = short[0].trim();
-    const ingred = short[1].trim();
-    const qty = short[2].trim();
-    const uom = short[3].trim();
-    const foot = short[4].trim();
+    if (short) {
+      // const nothing = short[0].trim();
+      const ingred = short[1].trim();
+      const qty = short[2].trim();
+      const uom = short[3].trim();
+      const foot = short[4].trim();
 
-    //if there is text in the first column, track it.
-    if (short[0]) {
-      activeType = short[0];
-      //A little dirty, but good enough
-      if (short[0] === 'Ingredients') pipifiedText += `#`;
-    }
-
-    // Nutrients and Ingredients get a sequence
-    if (activeType === 'Nutrients' || activeType === 'Ingredients') {
-
-      // If this has a title (line[0]), use it. Returns the rest
-      pipifiedText += `${seq}|${ingred}|${qty}|${uom}|||${foot}||$`;
-    }
-    //Other Ingredients and anything else dont
-    else {
-
-      //If this is non-med
-      if (!onceThrough) {
-        pipifiedText += `#|${ingred}|${qty}|${uom}|||${foot}||$`;
-        onceThrough = true;
-      } else {
-        //if this is anything else
-        pipifiedText += `|${ingred}|${qty}|${uom}|||${foot}||$`;
+      //if there is text in the first column, track it.
+      if (short[0]) {
+        activeType = short[0];
+        //A little dirty, but good enough
+        if (short[0] === 'Ingredients') pipifiedText += `#`;
       }
 
+      // Nutrients and Ingredients get a sequence
+      if (activeType === 'Nutrients' || activeType === 'Ingredients') {
+
+        // If this has a title (line[0]), use it. Returns the rest
+        pipifiedText += `${seq}|${ingred}|${qty}|${uom}|||${foot}||$`;
+      }
+      //Other Ingredients and anything else dont
+      else {
+
+        //If this is non-med
+        if (!onceThrough) {
+          pipifiedText += `#|${ingred}|${qty}|${uom}|||${foot}||$`;
+          onceThrough = true;
+        } else {
+          //if this is anything else
+          pipifiedText += `|${ingred}|${qty}|${uom}|||${foot}||$`;
+        }
+
+      }
+
+      seq++;
     }
 
-    seq++;
   }
 
   return pipifiedText;
