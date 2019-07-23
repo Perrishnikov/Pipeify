@@ -6,6 +6,28 @@
 
 <head>
     <style>
+        .envy {
+            background-color: lightgreen;
+        }
+
+        .invalid {
+            border-color: red;
+            border-width: 2px;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0px;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            padding: 5px;
+            border: 1px solid black;
+        }
+
         body {
             font-family: proxima-nova, sans-serif;
             font-weight: normal;
@@ -98,44 +120,83 @@
             <li>How to enter translations...</li> -->
         </ul>
     </div>
-    <div class="general padding">
-      Select Template:
-        <select id="countrySelect">
-            <option value="">--Please choose an option--</option>
-            <option value="CA">Canadian Ingredients</option>
-            <option value="US">US Ingredients</option>
-        </select>
-        <span style="margin-left:30px;"><a href="./Pipeify Template.xlsx">Download Template</a></span>
+
+    <div class="general padding" id="ingredType">
+        <span style="margin-right: 12px">Updating or adding all new ingredients?:</span>
+
+        <input type="radio" id="newRadio" name="ingredType" value="New">
+        <label for="New">New</label>
+
+        <input type="radio" id="updateRadio" name="ingredType" value="Update" checked>
+        <label for="Update">Update</label>
+
+    </div>
+    <!-- UPDATE -->
+    <div id="Update" class="">
+        <div class="general padding label"><span>Update Ingredient</span></div>
+        <div id="updateSource" class="general padding border pointer" contenteditable="false">
+            Click to paste line from Salsify
+        </div>
+        <div class="general padding label"><span>Update Line</span>
+            <span>Or click to create New...
+                <button style="margin-left:12px;margin-top:12px;width:100px;height:30px;border-radius:6px;" id="newNutrient">Nutrient</button>
+            </span>
+
+            <span>
+                <button style="margin-left:12px;margin-top:12px;width:100px;height:30px;border-radius:6px;" id="newIngredient">Ingredient</button>
+            </span>
+
+        </div>
+        <div id="updateLine" class="general padding border pointer" contenteditable="false">
+
+        </div>
     </div>
 
-    <div class="general padding" contenteditable="false">
-        <div class=" label">
-            <svg id="target-icon" class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="RoyalBlue" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
+
+
+    <!-- NEW -->
+    <div id="New" class="hidden">
+        <div class="general padding label"><span>New</span></div>
+        <div class="general padding">
+            Select Template:
+            <select id="countrySelect">
+                <option value="">--Please choose an option--</option>
+                <option value="CA">Canadian Ingredients</option>
+                <option value="US">US Ingredients</option>
+            </select>
+            <span style="margin-left:30px;"><a href="./Pipeify Template.xlsx">Download Template</a></span>
+        </div>
+        <div class="general padding" contenteditable="false">
+            <div class=" label">
+                <!-- <svg id="target-icon" class="info-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="RoyalBlue" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12" y2="8"></line>
-            </svg>
-            <span>SOURCE from spreadsheet</span>
+            </svg> -->
+                <span>SOURCE from spreadsheet</span>
+            </div>
+            <!-- message -->
+            <div id="target-info" class="message border info"></div>
         </div>
-        <!-- message -->
-        <div id="target-info" class="message border info"></div>
-    </div>
-    <div id="source" class="general padding border pointer" contenteditable="false">
-        click to paste from Template
-    </div>
-    <!-- TARGET -->
-    <div class="general">
-        <h3>TARGET as appears in Salsify </h3>
-    </div>
-    <div id="target" class="general padding border pointer" contenteditable="false">
-        <span class="hidden">Hidden</span>
-    </div>
-    <!-- PASTE -->
-    <div id="" class="general">
-        <h3>PASTE into <a href="https://app.salsify.com/app/orgs/s-f73c1ef5-feb8-4209-b98f-559667e190f8/products?content_locales[]=en-US">Salsify</a> INGREDIENT_TEMPLATE_IMPORT</INGREDIENTS_TEMPLATE_IMPORT></h3>
-    </div>
-    <div id="paste" class="general padding border pointer" contenteditable="false">
-        <span class="hidden">Hidden</span>
+        <div id="source" class="general padding border pointer" contenteditable="false">
+            click to paste from Template
+        </div>
+        <!-- TARGET -->
+        <div class="general">
+            <h3>TARGET as appears in Salsify </h3>
+        </div>
+        <div id="target" class="general padding border pointer" contenteditable="false">
+            <span class="hidden">Hidden</span>
+        </div>
+        <!-- PASTE -->
+        <div id="" class="general">
+            <h3>PASTE into <a href="https://app.salsify.com/app/orgs/s-f73c1ef5-feb8-4209-b98f-559667e190f8/products?content_locales[]=en-US">Salsify</a> INGREDIENT_TEMPLATE_IMPORT</INGREDIENTS_TEMPLATE_IMPORT>
+            </h3>
+        </div>
+        <div id="paste" class="general padding border pointer" contenteditable="false">
+            <span class="hidden">Hidden</span>
+        </div>
+
     </div>
     <!-- message -->
     <div class="general">
@@ -143,7 +204,6 @@
             Copied to clipboard 😊
         </div>
     </div>
-
     <script src="./app.js"></script>
 </body>
 
