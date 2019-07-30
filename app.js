@@ -197,7 +197,7 @@ newNutrient.addEventListener('click', (e) => {
           <th>Name</th>
           <th>QTY</th>
           <th>UOM</th>
-          <th>DV (number or **)</th>
+          <th>DV% num. or **</th>
           <th>DV symbol (%)</th>
           <th>Footnote (†)</th>
         </tr>
