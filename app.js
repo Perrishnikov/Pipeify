@@ -197,9 +197,9 @@ newNutrient.addEventListener('click', (e) => {
           <th>Name</th>
           <th>QTY</th>
           <th>UOM</th>
-          <th>DV</th>
-          <th>DV symbol</th>
-          <th>Footnote †</th>
+          <th>DV (**)</th>
+          <th>DV symbol (%)</th>
+          <th>Footnote (†)</th>
         </tr>
         <tr id="line${count}" style="text-align:center;">
           <td id="order" contenteditable="true"></td>
