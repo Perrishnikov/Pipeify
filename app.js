@@ -71,10 +71,10 @@ document.addEventListener('click', e => {
     if ([...newNutrient.classList].includes('envy')) {
 
       //Validate Order
-      if (!validate.isNumber(order.innerText)) {
-        order.classList.add('invalid');
-        return;
-      }
+      // if (!validate.isNotEmpty(order.innerText) && !validate.isNumber(order.innerText)) {
+      //   order.classList.add('invalid');
+      //   return;
+      // }
 
       //Validate Name
       if (!validate.isNotEmpty(name.innerText)) {
