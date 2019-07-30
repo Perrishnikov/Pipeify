@@ -23,7 +23,7 @@ const validate = {
     return str1.length > min;
   },
   isValidUOM: (value) => {
-    const stuff = ['mg', 'mcg', 'g', 'ml', 'l', 'oz', ''];
+    const stuff = ['mg', 'mcg', 'g', 'ml', 'l', 'oz', 'CFU', ''];
     console.assert(stuff.includes(value));
     return stuff.includes(value);
   }
