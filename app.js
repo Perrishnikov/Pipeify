@@ -71,7 +71,7 @@ document.addEventListener('click', e => {
     if ([...newNutrient.classList].includes('envy')) {
 
       //Validate Order
-      if (!validate.isNotEmpty(order.innerText) && !validate.isNumber(order.innerText)) {
+      if (!validate.isNumber(order.innerText)) {
         order.classList.add('invalid');
         return;
       }
