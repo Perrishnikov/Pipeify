@@ -83,10 +83,10 @@ document.addEventListener('click', e => {
       }
 
       //Validate qty
-      if (!validate.isNotEmpty(qty.innerText) && !validate.isNumber(qty.innerText)) {
-        qty.classList.add('invalid');
-        return;
-      }
+      // if (!validate.isNotEmpty(qty.innerText) && !validate.isNumber(qty.innerText)) {
+      //   qty.classList.add('invalid');
+      //   return;
+      // }
 
       //Validate UOM - TODO: Need a better list from Tammy
       if (!validate.isValidUOM(uom.innerText)) {
