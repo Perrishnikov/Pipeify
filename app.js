@@ -250,7 +250,7 @@ newIngredient.addEventListener('click', (e => {
                 <th>Name</th>
                 <th>qty</th>
                 <th>UOM</th>
-                <th class="pointer" id="head-asterisk" >Asterisk</th>
+                <th class="pointer" id="head-asterisk" title="add **">Asterisk</th>
               </tr>
               <tr style="text-align:center;">
                 <td id="order" contenteditable="true"></td>
