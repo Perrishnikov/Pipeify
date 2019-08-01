@@ -174,20 +174,20 @@ document.addEventListener('click', e => {
   }
   //If User clicks "DV symbol", give them a %
   else if (e.target.id == 'head-syml') {
-    document.querySelector('#syml').innerText = '%';
+    document.querySelector('#syml').innerText = document.querySelector('#syml').innerText == '%' ? '' : '%';
   }
   //If User clicks "Footnote †", give them a †
   else if (e.target.id == 'head-dagger') {
-    document.querySelector('#foot').innerText = '†';
+    document.querySelector('#foot').innerText = document.querySelector('#foot').innerText == '†' ? '' : '†';
   }
   //If User clicks "asterisk", give them a **
   else if (e.target.id == 'head-asterisk') {
     if (document.querySelector('#dvAmt')) {
-      document.querySelector('#dvAmt').innerText = '**';
+      document.querySelector('#dvAmt').innerText = document.querySelector('#dvAmt').innerText == '**' ? '' : '**';
     }
 
     if (document.querySelector('#asterisk')) {
-      document.querySelector('#asterisk').innerText = '**';
+      document.querySelector('#asterisk').innerText = document.querySelector('#asterisk').innerText == '**' ? '' : '**';
     }
   }
 });
