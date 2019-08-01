@@ -172,6 +172,24 @@ document.addEventListener('click', e => {
 
 
   }
+  //If User clicks "DV symbol", give them a %
+  else if (e.target.id == 'head-syml') {
+    document.querySelector('#syml').innerText = '%';
+  }
+  //If User clicks "Footnote †", give them a †
+  else if (e.target.id == 'head-dagger') {
+    document.querySelector('#foot').innerText = '†';
+  }
+  //If User clicks "asterisk", give them a **
+  else if (e.target.id == 'head-asterisk') {
+    if (document.querySelector('#dvAmt')) {
+      document.querySelector('#dvAmt').innerText = '**';
+    }
+
+    if (document.querySelector('#asterisk')) {
+      document.querySelector('#asterisk').innerText = '**';
+    }
+  }
 });
 
 /**
@@ -197,9 +215,9 @@ newNutrient.addEventListener('click', (e) => {
           <th>Name</th>
           <th>QTY</th>
           <th>UOM</th>
-          <th>DV% num. or **</th>
-          <th>DV symbol (%)</th>
-          <th>Footnote (†)</th>
+          <th class="pointer" id="head-asterisk" title="add **">DV% num. or **</th>
+          <th class="pointer" title="click to add %" id="head-syml">DV symbol (%)</th>
+          <th class="pointer" title="click to add †" id="head-dagger">Footnote (†)</th>
         </tr>
         <tr id="line${count}" style="text-align:center;">
           <td id="order" contenteditable="true"></td>
@@ -207,7 +225,7 @@ newNutrient.addEventListener('click', (e) => {
           <td id="qty" contenteditable="true"></td>
           <td id="uom" contenteditable="true"></td>
           <td id="dvAmt" contenteditable="true"></td>
-          <td id="syml" contenteditable="true">%</td>
+          <td id="syml" contenteditable="true"></td>
           <td id="foot" contenteditable="true"></td>
         </tr>
       </table>
@@ -232,7 +250,7 @@ newIngredient.addEventListener('click', (e => {
                 <th>Name</th>
                 <th>qty</th>
                 <th>UOM</th>
-                <th>Asterisk</th>
+                <th class="pointer" id="head-asterisk" >Asterisk</th>
               </tr>
               <tr style="text-align:center;">
                 <td id="order" contenteditable="true"></td>
@@ -350,7 +368,7 @@ document.querySelector('#updateSource').addEventListener('click', e => {
                 <th>qty</th>
                 <th>UOM</th>
                 <th>DV</th>
-                <th>DV symbol</th>
+                <th id="head-syml">DV symbol</th>
                 <th>footnote †</th>
               </tr>
               <tr style="text-align:center;">
