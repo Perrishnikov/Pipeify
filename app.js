@@ -40,7 +40,7 @@ const numberOfCols = 5;
 /**
  * Button for Pipeify
  */
-const pipifyButton = `<button style="margin-top:12px;width:100px;height:30px;border-radius:6px;" id="pipeifyLine">Pipeify</button>`;
+const pipifyButton = `<button class="pointer" style="margin-top:12px;width:100px;height:30px;border-radius:6px;" id="pipeifyLine">Pipeify</button>`;
 
 // For Pipeify button, since this is added dynamically.
 document.addEventListener('click', e => {
